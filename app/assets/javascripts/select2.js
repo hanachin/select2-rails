@@ -1178,7 +1178,7 @@ the specific language governing permissions and limitations under the Apache Lic
                dropLeft = offset.left + width - dropWidth;
             }
 
-            if (above) {
+            if (this.opts.allowAbove && above) {
                 dropTop = offset.top - dropHeight;
                 this.container.addClass("select2-drop-above");
                 $dropdown.addClass("select2-drop-above");
@@ -3180,7 +3180,8 @@ the specific language governing permissions and limitations under the Apache Lic
         selectOnBlur: false,
         adaptContainerCssClass: function(c) { return c; },
         adaptDropdownCssClass: function(c) { return null; },
-        nextSearchTerm: function(selectedObject, currentSearchTerm) { return undefined; }
+        nextSearchTerm: function(selectedObject, currentSearchTerm) { return undefined; },
+        allowAbove: true
     };
 
     $.fn.select2.ajaxDefaults = {
