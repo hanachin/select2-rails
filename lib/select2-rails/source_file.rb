@@ -21,15 +21,12 @@ class SourceFile < Thor
     end
   end
 
-  desc "convert css to scss file", "convert css to scss file"
+  desc "convert css to css.erb file", "make css preprocess with erb"
   def convert
     self.destination_root = "app/assets"
     inside destination_root do
-      run("cp stylesheets/select2.css stylesheets/select2.css.scss")
-      gsub_file 'stylesheets/select2.css.scss', '(select2-spinner.gif)', "('select2-spinner.gif')"
-      gsub_file 'stylesheets/select2.css.scss', '(select2.png)', "('select2.png')"
-      gsub_file 'stylesheets/select2.css.scss', '(select2x2.png)', "('select2x2.png')"
-      gsub_file 'stylesheets/select2.css.scss', ' url', ' image-url'
+      run("cp stylesheets/select2.css stylesheets/select2.css.erb")
+      gsub_file 'stylesheets/select2.css.erb', %r/url\(([^\)]*)\)/, 'url(<%= asset_path(\1) %>)'
     end
   end
 
@@ -42,13 +39,13 @@ class SourceFile < Thor
   def fetch_tags
     http = HTTPClient.new
     response = JSON.parse(http.get("https://api.github.com/repos/ivaynberg/select2/tags").body)
-    response.map{|tag| tag["name"]}.sort    
+    response.map{|tag| tag["name"]}.sort
   end
   def languages
-    [ "ar", "bg", "ca", "cs", "da", "de", "el", "es", "et", "eu", "fa", "fi", "fr", "gl", "he", "hr", 
-      "hu", "id", "is", "it", "ja", "ko", "lt", "lv", "mk", "nl", "no", "pl", "pt-BR", 
+    [ "ar", "bg", "ca", "cs", "da", "de", "el", "es", "et", "eu", "fa", "fi", "fr", "gl", "he", "hr",
+      "hu", "id", "is", "it", "ja", "ko", "lt", "lv", "mk", "ms", "nl", "no", "pl", "pt-BR",
       "pt-PT", "ro", "ru", "sk", "sv", "th", "tr", "ua", "vi", "zh-CN", "zh-TW"
-    ].sort   
+    ].sort
   end
   def select msg, elements
     elements.each_with_index do |element, index|
